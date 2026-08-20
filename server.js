@@ -127,6 +127,19 @@ app.post("/api/generate", async (req, res) => {
 // Healthcheck simples para plataformas de deploy
 app.get("/healthz", (_req, res) => res.json({ ok: true, model: MODEL }));
 
+// Qualquer outra rota /api desconhecida responde JSON (nunca HTML)
+app.use("/api", (_req, res) => res.status(404).json({ error: "Rota de API não encontrada." }));
+
+// Handler global de erros — garante resposta JSON mesmo em falhas inesperadas
+// (ex.: corpo maior que o limite do express.json → entity.too.large)
+app.use((err, _req, res, _next) => {
+  if (err && err.type === "entity.too.large") {
+    return res.status(413).json({ error: "Arquivo grande demais. Reduza o PDF ou aumente o limite do servidor/proxy." });
+  }
+  console.error("Erro:", err && err.message);
+  res.status(500).json({ error: (err && err.message) || "Erro interno do servidor." });
+});
+
 app.listen(PORT, () => {
   console.log(`Resumo Estruturado rodando em http://localhost:${PORT}`);
   console.log(`Modelo: ${MODEL} · max_tokens: ${MAX_TOKENS} · chave: ${API_KEY ? "configurada" : "AUSENTE"}`);

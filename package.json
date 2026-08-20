@@ -1,0 +1,17 @@
+{
+  "name": "resumo-estruturado",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gerador de resumo estruturado de petições (art. 343-A RISTJ / IN STJ-GP n. 42/2026) para STJ e STF.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
